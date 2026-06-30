@@ -1,11 +1,18 @@
 [Unit]
-Description=Employee Spring Boot App
+Description=Employee Spring Boot Application
 After=network.target
 
 [Service]
-User=root
+Type=simple
+User=jenkins
+WorkingDirectory=/opt
+
 ExecStart=/usr/bin/java -jar /opt/employee-app.jar
+
 Restart=always
+RestartSec=5
+
+SuccessExitStatus=143
 
 [Install]
 WantedBy=multi-user.target

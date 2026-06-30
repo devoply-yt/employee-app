@@ -14,7 +14,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo "Checking out source code..."
+                echo "========== Checkout =========="
                 checkout scm
             }
         }
@@ -22,11 +22,11 @@ pipeline {
         stage('Environment Check') {
             steps {
                 sh '''
-                    echo "=============================="
-                    echo "User        : $(whoami)"
-                    echo "Workspace   : $WORKSPACE"
-                    echo "JAVA_HOME   : $JAVA_HOME"
-                    echo "PATH        : $PATH"
+                    echo "========== Environment =========="
+                    echo "User       : $(whoami)"
+                    echo "Workspace  : $WORKSPACE"
+                    echo "JAVA_HOME  : $JAVA_HOME"
+                    echo "PATH       : $PATH"
 
                     echo
                     echo "Java Version"
@@ -39,63 +39,52 @@ pipeline {
                     echo
                     echo "Git Version"
                     git --version
-                    echo "=============================="
                 '''
             }
         }
 
         stage('Compile') {
             steps {
-                echo "Compiling project..."
+                echo "========== Compile =========="
                 sh 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
-                echo "Running Unit Tests..."
+                echo "========== Unit Tests =========="
                 sh 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                echo "Packaging application..."
+                echo "========== Package =========="
                 sh 'mvn package -DskipTests'
             }
         }
 
         stage('Archive Artifact') {
             steps {
+                echo "========== Archive =========="
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
-
-        stage('Deploy') {
-            steps {
-                sh '''
-                    chmod +x deploy.sh
-                    ./deploy.sh
-                '''
-            }
-        }
-
     }
 
     post {
 
         success {
-            echo "===================================="
-            echo "BUILD SUCCESSFUL"
-            echo "Application deployed successfully."
-            echo "===================================="
+            echo "========================================="
+            echo "CI Pipeline Completed Successfully"
+            echo "Artifact Generated Successfully"
+            echo "========================================="
         }
 
         failure {
-            echo "===================================="
-            echo "BUILD FAILED"
-            echo "Check Console Output."
-            echo "===================================="
+            echo "========================================="
+            echo "CI Pipeline Failed"
+            echo "========================================="
         }
 
         always {
