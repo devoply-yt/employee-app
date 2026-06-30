@@ -1,0 +1,11 @@
+[Unit]
+Description=Employee Spring Boot App
+After=network.target
+
+[Service]
+User=root
+ExecStart=/usr/bin/java -jar /opt/employee-app.jar
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
